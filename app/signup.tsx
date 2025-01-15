@@ -1,26 +1,24 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { ScrollView, View, Image, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUp() {
   return (
-    <View style={styles.container}>
-      {/* Star Icon */}
-      <View style={styles.starContainer}>
-        <Ionicons name="star" size={24} color="#8B5CF6" />
+    <ScrollView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Sign Up</Text>
+        <Image
+          source={require('../assets/images/favicon.png')}
+          style={{ width: 50, height: 50 }}
+        />
       </View>
 
-      {/* Sign Up Form */}
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign up</Text>
-
         {/* Name Input */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Lina"
-            placeholderTextColor="#94A3B8"
           />
         </View>
 
@@ -58,7 +56,7 @@ export default function SignUp() {
           <View style={styles.passwordContainer}>
             <TextInput
               style={styles.passwordInput}
-              placeholder="repeat password"
+              placeholder="re-enter your password"
               placeholderTextColor="#94A3B8"
               secureTextEntry
             />
@@ -69,9 +67,11 @@ export default function SignUp() {
         </View>
 
         {/* Sign Up Button */}
-        <TouchableOpacity style={styles.signUpButton}>
-          <Text style={styles.signUpButtonText}>Sign Up</Text>
-        </TouchableOpacity>
+        <Link href="./(main-page)/home" asChild>
+          <TouchableOpacity style={styles.signUpButton}>
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </Link>
 
         {/* Login Link */}
         <View style={styles.loginContainer}>
@@ -81,7 +81,7 @@ export default function SignUp() {
           </Link>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -91,9 +91,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 24,
   },
-  starContainer: {
-    alignItems: 'flex-end',
-    marginBottom: 32,
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 36,
+    marginTop: 44,
   },
   formContainer: {
     flex: 1,
@@ -101,7 +104,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 32,
     color: '#1E293B',
   },
   inputGroup: {
@@ -155,6 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 24,
   },
   loginText: {
     fontSize: 16,
