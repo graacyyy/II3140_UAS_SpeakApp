@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Link } from 'expo-router';
 
 
 export default function LandingPage() {
@@ -21,7 +22,7 @@ export default function LandingPage() {
       <View style={styles.content}>
         <View style={styles.textContainer}>
           <Text style={styles.mainHeading}>
-            The easiest way to{'\n'}learn <Text style={styles.highlightText}>english</Text>. <Text>📚</Text>
+            The easiest way to learn <Text style={styles.highlightText}>english</Text>. <Text>📚</Text>
           </Text>
 
           <Text style={styles.subHeading}>
@@ -31,13 +32,17 @@ export default function LandingPage() {
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.signUpButton}>
-            <Text style={styles.signUpText}>Sign Up</Text>
-          </TouchableOpacity>
+          <Link href="/signup" asChild>
+            <TouchableOpacity style={styles.signUpButton}>
+              <Text style={styles.signUpText}>Sign Up</Text>
+            </TouchableOpacity>
+          </Link>
 
-          <TouchableOpacity>
-            <Text style={styles.loginText}>Log In</Text>
-          </TouchableOpacity>
+          <Link href="/login" asChild>
+            <TouchableOpacity style={styles.loginButton}>
+              <Text style={styles.loginText}>Log In</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </SafeAreaView>
@@ -47,7 +52,7 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   imageContainer: {
     height: '50%',
@@ -86,17 +91,26 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     gap: 16,
+    marginTop: 20,
   },
   signUpButton: {
-    backgroundColor: '#000',
+    backgroundColor: 'black',
     paddingVertical: 18,
     borderRadius: 100,
     alignItems: 'center',
   },
   signUpText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 18,
     fontWeight: '600',
+  },
+  loginButton: {
+    backgroundColor: 'white',
+    paddingVertical: 18,
+    borderRadius: 100,
+    borderColor: '#8B5CF6',
+    borderWidth: 2,
+    alignItems: 'center',
   },
   loginText: {
     color: '#8B5CF6',

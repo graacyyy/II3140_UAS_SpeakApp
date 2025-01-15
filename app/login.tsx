@@ -1,19 +1,19 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
   return (
     <View style={styles.container}>
-      {/* Star Icon */}
-      <View style={styles.starContainer}>
-        <Ionicons name="star" size={24} color="#8B5CF6" />
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Log In</Text>
+        <Image
+          source={require('../assets/images/favicon.png')}
+          style={{ width: 50, height: 50 }}
+        />
       </View>
 
-      {/* Login Form */}
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Log In</Text>
-
         {/* Email Input */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Email address</Text>
@@ -53,10 +53,12 @@ export default function Login() {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Log In</Text>
-        </TouchableOpacity>
-
+        <Link href="./(main-page)/home" asChild>
+          <TouchableOpacity style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>Log In</Text>
+          </TouchableOpacity>
+        </Link>
+    
         {/* Sign Up Link */}
         <View style={styles.signUpContainer}>
           <Text style={styles.signUpText}>Don't have an account? </Text>
@@ -75,9 +77,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 24,
   },
-  starContainer: {
-    alignItems: 'flex-end',
-    marginBottom: 32,
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 36,
+    marginTop: 44,
   },
   formContainer: {
     flex: 1,
@@ -85,7 +90,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 32,
     color: '#1E293B',
   },
   inputGroup: {
