@@ -25,9 +25,9 @@ export default function Login() {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-            <TouchableOpacity style={styles.checkIcon}>
+            {/* <TouchableOpacity style={styles.checkIcon}>
               <Ionicons name="checkmark-circle" size={24} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
