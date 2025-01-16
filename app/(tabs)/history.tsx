@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
-import NavigationBar from '../components/navbar';
+import Header from '@/components/header';
 
 type HistoryDataItem = {
   type: string;
@@ -14,29 +14,24 @@ const historyData: HistoryDataItem[] = Array(20).fill({
 });
 
 const HistoryItem = ({ type, timestamp, score }: HistoryDataItem) => (
-  <TouchableOpacity style={styles.historyItem}>
-    <View style={styles.historyContent}>
-      <Text style={styles.historyType}>{type}</Text>
-      <Text style={styles.historyTimestamp}>{timestamp}</Text>
-    </View>
-    <View style={styles.scoreBadge}>
-      <Text style={styles.scoreText}>{score}</Text>
-    </View>
-  </TouchableOpacity>
+  <View style={styles.historyItemContainer}>
+    <TouchableOpacity style={styles.historyItem}>
+      <View style={styles.historyContent}>
+        <Text style={styles.historyType}>{type}</Text>
+        <Text style={styles.historyTimestamp}>{timestamp}</Text>
+      </View>
+      <View style={styles.scoreBadge}>
+        <Text style={styles.scoreText}>{score}</Text>
+      </View>
+    </TouchableOpacity>
+  </View>
 );
 
 export default function History() {
   return (
-    <View style={styles.wrapper}>
+    <>
+      <Header />
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.logo}>speak.</Text>
-          <Image 
-            source={require('../../assets/images/profile-placeholder.png')}
-            style={styles.profilePic}
-          />
-        </View>
-
         <View style={styles.titleSection}>
           <Text style={styles.title}>History</Text>
           <Text style={styles.subtitle}>Your learning journey and progress</Text>
@@ -54,45 +49,22 @@ export default function History() {
           )}
           keyExtractor={(_, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.historyList}
         />
       </View>
-      
-      <NavigationBar />
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
   container: {
     flex: 1,
-    padding: 20,
-    paddingBottom: 80, // Space for navigation bar
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  logo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#8B5CF6',
-  },
-  profilePic: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#DDD',
+    paddingHorizontal: 20,
+    backgroundColor: '#F8F9FA',
   },
   titleSection: {
     marginTop: 20,
     marginBottom: 20,
+    flexDirection: 'column'
   },
   title: {
     fontSize: 32,
@@ -100,19 +72,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#4B5563',
   },
-  historyList: {
-    gap: 12,
+  historyItemContainer: {
+    marginBottom: 12,
   },
   historyItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
     backgroundColor: 'white',
     borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

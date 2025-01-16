@@ -1,5 +1,5 @@
 import { ScrollView, View, Image, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUp() {
@@ -8,7 +8,7 @@ export default function SignUp() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Sign Up</Text>
         <Image
-          source={require('../assets/images/favicon.png')}
+          source={require('@/assets/images/favicon.png')}
           style={{ width: 50, height: 50 }}
         />
       </View>
@@ -67,11 +67,12 @@ export default function SignUp() {
         </View>
 
         {/* Sign Up Button */}
-        <Link href="./(main-page)/home" asChild>
-          <TouchableOpacity style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>Sign Up</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.signUpButton} onPress={() => {
+          router.dismissAll();
+          router.push('/(tabs)');
+        }}>
+          <Text style={styles.signUpButtonText}>Sign Up</Text>
+        </TouchableOpacity>
 
         {/* Login Link */}
         <View style={styles.loginContainer}>
