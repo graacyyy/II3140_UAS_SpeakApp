@@ -7,49 +7,131 @@ import {
   TextInput,
   SafeAreaView,
 } from 'react-native';
+import { useFonts, Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
+import { useRouter } from 'expo-router';
 
 interface Question {
   id: number;
   text: string;
-  type: 'multiple-choice' | 'text-input';
+  type: 'multiple-choice' | 'multiple-select' | 'text-input';
   options?: string[];
-  answer: string;
+  answer: string | string[];
+  multipleCorrect?: boolean;
 }
 
 const questions: Question[] = [
   {
     id: 1,
-    text: 'Which one is countable? And, which one is uncountable?',
+    text: 'Which is the correct sentence?',
     type: 'multiple-choice',
-    options: ['Bread', 'Student', 'Sand', 'Book', 'Shirt', 'Milk'],
-    answer: 'Student', // This is simplified - you might want to handle multiple answers
+    options: [
+      'I am going to school yesterday.',
+      'I went to school yesterday.',
+      'I goes to school yesterday.',
+      'I gone to school yesterday.'
+    ],
+    answer: 'I went to school yesterday.'
   },
   {
     id: 2,
-    text: 'How long has the applicant been working in marketing?',
-    type: 'text-input',
-    answer: '', // Define the correct answer here
+    text: 'Select all correct plural forms:',
+    type: 'multiple-select',
+    options: [
+      'childs',
+      'children',
+      'boxes',
+      'mouses',
+      'mice',
+      'feet'
+    ],
+    answer: ['children', 'boxes', 'mice', 'feet'],
+    multipleCorrect: true
   },
-  // Add more questions as needed
+  {
+    id: 3,
+    text: 'Which words are prepositions?',
+    type: 'multiple-select',
+    options: [
+      'in',
+      'run',
+      'under',
+      'happy',
+      'between',
+      'at'
+    ],
+    answer: ['in', 'under', 'between', 'at'],
+    multipleCorrect: true
+  },
+  {
+    id: 4,
+    text: 'Choose the correct form of "to be":',
+    type: 'multiple-choice',
+    options: [
+      'She am happy.',
+      'She are happy.',
+      'She is happy.',
+      'She be happy.'
+    ],
+    answer: 'She is happy.'
+  },
+  {
+    id: 5,
+    text: 'Select all proper nouns:',
+    type: 'multiple-select',
+    options: [
+      'London',
+      'city',
+      'John',
+      'book',
+      'Monday',
+      'France'
+    ],
+    answer: ['London', 'John', 'Monday', 'France'],
+    multipleCorrect: true
+  }
 ];
 
-interface QuizScreenProps {
-  navigation: any;
-}
-
-const QuizScreen: React.FC<QuizScreenProps> = ({ navigation }) => {
+const QuizScreen = () => {
+  const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [textAnswer, setTextAnswer] = useState('');
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_700Bold,
+  });
+
+  const handleAnswerSelect = (option: string) => {
+    const question = questions[currentQuestion];
+    
+    if (question.type === 'multiple-select') {
+      setSelectedAnswers(prev => 
+        prev.includes(option)
+          ? prev.filter(item => item !== option)
+          : [...prev, option]
+      );
+    } else {
+      setSelectedAnswer(option);
+    }
+  };
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer('');
+      setSelectedAnswers([]);
       setTextAnswer('');
     } else {
-      // Handle quiz completion
-      navigation.navigate('QuizResults');
+      router.push({
+        pathname: '/(quiz)/quizresults',
+        params: {
+          score: 3,
+          totalQuestions: questions.length
+        }
+      });
     }
   };
 
@@ -59,14 +141,14 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ navigation }) => {
       setSelectedAnswer('');
       setTextAnswer('');
     } else {
-      navigation.goBack();
+      router.goBack();
     }
   };
 
   const renderQuestion = () => {
     const question = questions[currentQuestion];
 
-    if (question.type === 'multiple-choice') {
+    if (question.type === 'multiple-choice' || question.type === 'multiple-select') {
       return (
         <View style={styles.optionsContainer}>
           {question.options?.map((option, index) => (
@@ -74,13 +156,17 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ navigation }) => {
               key={index}
               style={[
                 styles.optionButton,
-                selectedAnswer === option && styles.selectedOption,
+                question.type === 'multiple-select'
+                  ? selectedAnswers.includes(option) && styles.selectedOption
+                  : selectedAnswer === option && styles.selectedOption,
               ]}
-              onPress={() => setSelectedAnswer(option)}
+              onPress={() => handleAnswerSelect(option)}
             >
               <Text style={[
                 styles.optionText,
-                selectedAnswer === option && styles.selectedOptionText
+                question.type === 'multiple-select'
+                  ? selectedAnswers.includes(option) && styles.selectedOptionText
+                  : selectedAnswer === option && styles.selectedOptionText
               ]}>
                 {option}
               </Text>
@@ -161,24 +247,34 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   headerTitle: {
+    fontFamily: 'Inter_700Bold',
     fontSize: 20,
     fontWeight: '600',
-    marginLeft: 20,
+    flex: 1,
+    textAlign: 'center',
+    marginRight: 24,
   },
   questionCard: {
-    margin: 20,
-    padding: 20,
+    marginTop: 32,
+    marginBottom: 24,
+    marginHorizontal: 32,
+    paddingVertical: 36,
+    paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
+    borderWidth: 2,
+    borderColor: '#CDD2D8',
+    alignItems: 'center',
   },
   questionNumber: {
+    fontFamily: 'Inter_700Bold',
     fontSize: 20,
     color: '#8A2BE2',
     marginBottom: 10,
+    justifyContent: 'center',
   },
   questionText: {
+    fontFamily: 'Inter_400Regular',
     fontSize: 18,
     color: '#333',
     textAlign: 'center',
@@ -187,37 +283,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    padding: 20,
     gap: 10,
   },
   optionButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#EEEEEE',
+    borderColor: '#CDD2D8',
     marginHorizontal: 5,
     marginVertical: 5,
   },
   selectedOption: {
-    backgroundColor: '#8A2BE2',
-    borderColor: '#8A2BE2',
+    backgroundColor: '#F1EBFF',
+    borderColor: '#7534FF',
   },
   optionText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Inter_400Regular',
   },
   selectedOptionText: {
-    color: 'white',
+    color: '#7534FF',
   },
   textInput: {
-    margin: 20,
+    marginHorizontal: 32,
     padding: 15,
-    borderWidth: 1,
-    borderColor: '#8A2BE2',
+    borderWidth: 1.6,
+    borderColor: '#915DFF',
     borderRadius: 10,
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
   },
+
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -237,6 +335,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#8A2BE2',
     fontSize: 16,
+    fontFamily: 'Inter_500Medium',
   },
   nextButton: {
     paddingVertical: 10,
@@ -247,6 +346,7 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily: 'Inter_500Medium',
   },
 });
 
