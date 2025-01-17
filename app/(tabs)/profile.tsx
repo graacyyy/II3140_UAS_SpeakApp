@@ -86,10 +86,16 @@ const styles = StyleSheet.create({
   logoutButton: {
     alignSelf: "center",
     padding: 10,
+    borderColor : "red",
+    borderRadius : 16,
+    borderWidth: 1,
+    backgroundColor : "#fff",
+    width : "100%",
   },
   logoutText: {
     fontSize: 16,
     color: "red",
+    textAlign : "center",
     fontWeight: "bold",
   },
 });
