@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { useAuth } from "@/context/useAuth";
 
 export default function Home() {
-  
   const { session } = useAuth();
 
   useEffect(() => {
@@ -39,7 +38,10 @@ export default function Home() {
 
         <TouchableOpacity
           style={styles.logoutButton}
-          onPress={() => supabase.auth.signOut()}
+          onPress={() => {
+            supabase.auth.signOut();
+            router.replace("/login");
+          }}
         >
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ScrollView,
   View,
@@ -155,6 +155,3 @@ const styles = StyleSheet.create({
 });
 
 export default LearnPage;
-function useEffect(arg0: () => void) {
-  throw new Error("Function not implemented.");
-}

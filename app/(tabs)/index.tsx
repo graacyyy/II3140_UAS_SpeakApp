@@ -7,38 +7,18 @@ import {
   Image,
 } from "react-native";
 import Header from "@/components/header";
-import type { Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { router } from "expo-router";
 import { useAuth } from "@/context/useAuth";
 
 export default function Home() {
-  // const [session, setSession] = useState<Session | null>(null);
-
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setSession(session);
-  //   });
-
-  //   supabase.auth.onAuthStateChange((_event, session) => {
-  //     setSession(session);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.replace("/");
-  //   }
-  // }, [session]);
-
   const { session } = useAuth();
 
   useEffect(() => {
     if (!session) {
       router.replace("/");
     }
-  });
+  }, [session]);
 
   const handleQuizSelect = (
     category: "Grammar" | "Vocabulary" | "Reading" | "Writing"
