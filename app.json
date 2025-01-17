@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "UAS-PAWM",
-    "slug": "UAS-PAWM",
+    "slug": "speakdot",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,13 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-    "assets": ["assets/*"]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gracyasidabutar.speakdot"
     },
     "web": {
       "bundler": "metro",
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -37,6 +37,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b0d2d8b2-8f68-4120-92f9-e34ed86f4a0b"
+      }
+    },
+    "owner": "gracyasidabutar"
   }
 }

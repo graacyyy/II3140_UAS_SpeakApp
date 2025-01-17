@@ -14,6 +14,7 @@ import {
   Inter_700Bold,
   Inter_500Medium,
 } from "@expo-google-fonts/inter";
+import { quizService } from "@/lib/quizService";
 import { useAuth } from "@/context/useAuth";
 
 interface Question {
@@ -25,52 +26,21 @@ interface Question {
   multipleCorrect?: boolean;
 }
 
-const questionsByCategory: { [key: string]: Question[] } = {
-  Grammar: [
-    {
-      id: 1,
-      text: "Which is the correct sentence?",
-      type: "single-select",
-      options: [
-        "I am going to school yesterday.",
-        "I went to school yesterday.",
-        "I goes to school yesterday.",
-        "I gone to school yesterday.",
-      ],
-      answer: "I went to school yesterday.",
-    },
-    {
-      id: 2,
-      text: "Select all correct plural forms:",
-      type: "multiple-select",
-      options: ["childs", "children", "boxes", "mouses", "mice", "feet"],
-      answer: ["children", "boxes", "mice", "feet"],
-      multipleCorrect: true,
-    },
-    // Add more grammar questions here...
-  ],
-  Vocabulary: [
-    {
-      id: 1,
-      text: 'What is the synonym of "happy"?',
-      type: "single-select",
-      options: ["Sad", "Joyful", "Angry", "Tired"],
-      answer: "Joyful",
-    },
-    {
-      id: 2,
-      text: 'Write a sentence using the word "diligent".',
-      type: "text-input",
-      answer: "", // This will be evaluated manually or by more complex logic
-    },
-    // Add more vocabulary questions here...
-  ],
-  // Add more categories and questions as needed...
-};
-
 export default function QuizScreen() {
   const { category } = useLocalSearchParams<{ category: string }>();
   const router = useRouter();
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const questions = await quizService.getQuestionsByCategory(
+        category.toLowerCase() as string
+      );
+      setQuestions(questions);
+    };
+
+    loadQuestions();
+  }, [category]);
 
   const { session } = useAuth();
 
@@ -97,14 +67,11 @@ export default function QuizScreen() {
 
   if (!fontsLoaded) return null;
 
-  const questions =
-    questionsByCategory[category as keyof typeof questionsByCategory] || [];
-
   const handleBack = () => {
     router.back();
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const question = questions[currentQuestion];
     let isCorrect = false;
 
@@ -113,12 +80,17 @@ export default function QuizScreen() {
       selectedAnswer === question.answer
     ) {
       isCorrect = true;
-    } else if (
-      question.type === "multiple-select" &&
-      selectedAnswers.sort().join(",") ===
-        (question.answer as string[]).sort().join(",")
-    ) {
-      isCorrect = true;
+    } else if (question.type === "multiple-select") {
+      // Sort both arrays to ensure order doesn't matter
+      const sortedUserAnswers = [...selectedAnswers].sort();
+      const sortedCorrectAnswers = [...(question.answer as string[])].sort();
+
+      // Check if arrays have same length and all elements match
+      isCorrect =
+        sortedUserAnswers.length === sortedCorrectAnswers.length &&
+        sortedUserAnswers.every(
+          (answer, index) => answer === sortedCorrectAnswers[index]
+        );
     } else if (
       question.type === "text-input" &&
       textAnswer.toLowerCase() === (question.answer as string).toLowerCase()
@@ -128,6 +100,17 @@ export default function QuizScreen() {
 
     if (isCorrect) {
       setScore((prevScore) => prevScore + 1);
+      if (currentQuestion === questions.length - 1) {
+        await handleFinish(score + 1, {
+          ...userAnswers,
+          [question.id]:
+            question.type === "multiple-select"
+              ? selectedAnswers
+              : question.type === "text-input"
+              ? textAnswer
+              : selectedAnswer,
+        });
+      }
     }
 
     setUserAnswers((prev) => ({
@@ -146,27 +129,39 @@ export default function QuizScreen() {
       setSelectedAnswers([]);
       setTextAnswer("");
     } else {
-      handleFinish();
+      if (!isCorrect) {
+        await handleFinish(score, userAnswers);
+      }
     }
   };
 
-  const handleFinish = () => {
-    console.log("Sending data:", {
-      userAnswers,
-      questions,
-      category,
-    });
-
-    router.push({
-      pathname: "/quizresults",
-      params: {
-        score: score.toString(),
-        totalQuestions: questions.length.toString(),
-        userAnswers: encodeURIComponent(JSON.stringify(userAnswers)),
-        questions: encodeURIComponent(JSON.stringify(questions)),
+  const handleFinish = async (
+    num: number,
+    ua: {
+      [key: number]: string | string[];
+    }
+  ) => {
+    try {
+      await quizService.saveQuizAttempt({
         category,
-      },
-    });
+        score: num,
+        totalQuestions: questions.length,
+        // userAnswers: ua,
+      });
+
+      router.push({
+        pathname: "/quizresults",
+        params: {
+          score: num.toString(),
+          totalQuestions: questions.length.toString(),
+          userAnswers: encodeURIComponent(JSON.stringify(ua)),
+          questions: encodeURIComponent(JSON.stringify(questions)),
+          category,
+        },
+      });
+    } catch (error) {
+      console.error("Error saving quiz attempt:", error);
+    }
   };
 
   const renderQuestion = () => {

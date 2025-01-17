@@ -10,9 +10,8 @@ import {
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/useAuth";
-import { AuthError } from "@supabase/supabase-js";
+import type { AuthError } from "@supabase/supabase-js";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -22,7 +21,7 @@ export default function Login() {
   const { login } = useAuth();
 
   const handleLogin = async () => {
-    console.log("Login attempt:", { email, password });
+    // console.log("Login attempt:", { email, password });
 
     if (!email || !password) {
       Alert.alert("Error", "Please fill in all fields");

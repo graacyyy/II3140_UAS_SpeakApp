@@ -44,11 +44,11 @@ const QuizResultsScreen = () => {
   };
 
   const handleViewAnswers = () => {
-    console.log("Passing data:", {
-      userAnswers,
-      questions,
-      category,
-    });
+    // console.log("Passing data:", {
+    //   userAnswers,
+    //   questions,
+    //   category,
+    // });
 
     router.push({
       pathname: "/answers",
@@ -64,9 +64,9 @@ const QuizResultsScreen = () => {
     router.push("/");
   };
 
-  const parsedScore = score ? parseInt(score as string) : 0;
+  const parsedScore = score ? Number.parseInt(score as string) : 0;
   const parsedTotalQuestions = totalQuestions
-    ? parseInt(totalQuestions as string)
+    ? Number.parseInt(totalQuestions as string)
     : 0;
 
   return (

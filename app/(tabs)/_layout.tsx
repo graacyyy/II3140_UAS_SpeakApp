@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
-import { Home, BookOpen, History, User } from 'lucide-react-native';
+import { Icon } from "react-native-vector-icons/Icon";
 
 export default function TabLayout() {
 
@@ -16,25 +16,25 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{
         title: 'Home',
         tabBarIcon: ({color}) => (
-          <Home size={24} color={color} />
+          <Icon name="home" size={24} color={color} />
         )
       }}/>
       <Tabs.Screen name="learn" options={{
         title: 'Learn',
         tabBarIcon: ({color}) => (
-          <BookOpen size={24} color={color} />
+          <Icon name="book-open"  size={24} color={color} />
         )
       }}/>
       <Tabs.Screen name="history" options={{
         title: 'History',
         tabBarIcon: ({color}) => (
-          <History size={24} color={color} />
+          <Icon name="history" size={24} color={color} />
         )
       }}/>
       <Tabs.Screen name="profile" options={{
         title: 'Profile',
         tabBarIcon: ({color}) => (
-          <User size={24} color={color} />
+          <Icon name="profile" size={24} color={color} />
         )
       }}/>
     </Tabs>
