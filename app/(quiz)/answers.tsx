@@ -1,12 +1,25 @@
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { useFonts, Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
+import { useRouter, useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_700Bold,
+  Inter_500Medium,
+} from "@expo-google-fonts/inter";
+import { useAuth } from "@/context/useAuth";
 
 interface Question {
   id: number;
   text: string;
-  type: 'single-select' | 'text-input' | 'multiple-select';
+  type: "single-select" | "text-input" | "multiple-select";
   options?: string[];
   answer: string | string[];
   multipleCorrect?: boolean;
@@ -14,15 +27,28 @@ interface Question {
 
 export default function AnswersScreen() {
   const router = useRouter();
+
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+  });
+
   const { userAnswers, questions, category } = useLocalSearchParams();
 
   // Decode and parse the parameters
-  const decodedUserAnswers = userAnswers ? JSON.parse(decodeURIComponent(userAnswers as string)) : {};
-  const decodedQuestions = questions ? JSON.parse(decodeURIComponent(questions as string)) : [];
+  const decodedUserAnswers = userAnswers
+    ? JSON.parse(decodeURIComponent(userAnswers as string))
+    : {};
+  const decodedQuestions = questions
+    ? JSON.parse(decodeURIComponent(questions as string))
+    : [];
 
   // Add after the decode statements
-  console.log('Decoded User Answers:', decodedUserAnswers);
-  console.log('Decoded Questions:', decodedQuestions);
+  console.log("Decoded User Answers:", decodedUserAnswers);
+  console.log("Decoded Questions:", decodedQuestions);
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -39,27 +65,36 @@ export default function AnswersScreen() {
   };
 
   // Update the isCorrectAnswer function to handle null/undefined
-  const isCorrectAnswer = (question: Question, userAnswer: string | string[] | undefined) => {
+  const isCorrectAnswer = (
+    question: Question,
+    userAnswer: string | string[] | undefined
+  ) => {
     if (!userAnswer) return false;
-    
-    if (question.type === 'multiple-select') {
+
+    if (question.type === "multiple-select") {
       const sortedUserAnswer = (userAnswer as string[]).sort();
       const sortedCorrectAnswer = (question.answer as string[]).sort();
-      return JSON.stringify(sortedUserAnswer) === JSON.stringify(sortedCorrectAnswer);
+      return (
+        JSON.stringify(sortedUserAnswer) === JSON.stringify(sortedCorrectAnswer)
+      );
     }
     return userAnswer === question.answer;
   };
 
-  const renderOption = (option: string, isSelected: boolean, isCorrect: boolean) => {
-    let backgroundColor = 'transparent';
-    let borderColor = '#ccc';
-    
+  const renderOption = (
+    option: string,
+    isSelected: boolean,
+    isCorrect: boolean
+  ) => {
+    let backgroundColor = "transparent";
+    let borderColor = "#ccc";
+
     if (isSelected) {
-      backgroundColor = isCorrect ? '#E8F5E9' : '#FFEBEE';
-      borderColor = isCorrect ? '#4CAF50' : '#EF5350';
+      backgroundColor = isCorrect ? "#E8F5E9" : "#FFEBEE";
+      borderColor = isCorrect ? "#4CAF50" : "#EF5350";
     } else if (isCorrect) {
-      backgroundColor = '#F5F5F5';
-      borderColor = '#4CAF50';
+      backgroundColor = "#F5F5F5";
+      borderColor = "#4CAF50";
     }
 
     return (
@@ -73,11 +108,13 @@ export default function AnswersScreen() {
           },
         ]}
       >
-        <Text style={[
-          styles.optionText,
-          isSelected && isCorrect && styles.correctText,
-          isSelected && !isCorrect && styles.incorrectText,
-        ]}>
+        <Text
+          style={[
+            styles.optionText,
+            isSelected && isCorrect && styles.correctText,
+            isSelected && !isCorrect && styles.incorrectText,
+          ]}
+        >
           {option}
         </Text>
       </View>
@@ -104,41 +141,49 @@ export default function AnswersScreen() {
               <Text style={styles.questionNumber}>Question {index + 1}</Text>
               <Text style={styles.questionText}>{question.text}</Text>
 
-              {question.type === 'single-select' && question.options && (
+              {question.type === "single-select" && question.options && (
                 <View style={styles.optionsContainer}>
-                  {question.options.map((option) => renderOption(
-                    option,
-                    userAnswer === option,
-                    option === question.answer
-                  ))}
+                  {question.options.map((option) =>
+                    renderOption(
+                      option,
+                      userAnswer === option,
+                      option === question.answer
+                    )
+                  )}
                 </View>
               )}
 
-              {question.type === 'multiple-select' && question.options && (
+              {question.type === "multiple-select" && question.options && (
                 <View style={styles.optionsContainer}>
-                  {question.options.map((option) => renderOption(
-                    option,
-                    (userAnswer as string[])?.includes(option),
-                    (question.answer as string[]).includes(option)
-                  ))}
+                  {question.options.map((option) =>
+                    renderOption(
+                      option,
+                      (userAnswer as string[])?.includes(option),
+                      (question.answer as string[]).includes(option)
+                    )
+                  )}
                 </View>
               )}
 
-              {question.type === 'text-input' && (
+              {question.type === "text-input" && (
                 <View style={styles.textInputContainer}>
                   <Text style={styles.answerLabel}>Your Answer:</Text>
-                  <Text style={styles.textAnswer}>{userAnswer || 'No answer provided'}</Text>
+                  <Text style={styles.textAnswer}>
+                    {userAnswer || "No answer provided"}
+                  </Text>
                   <Text style={styles.answerLabel}>Correct Answer:</Text>
                   <Text style={styles.textAnswer}>{question.answer}</Text>
                 </View>
               )}
 
-              <View style={[
-                styles.resultBadge,
-                isCorrect ? styles.correctBadge : styles.incorrectBadge
-              ]}>
+              <View
+                style={[
+                  styles.resultBadge,
+                  isCorrect ? styles.correctBadge : styles.incorrectBadge,
+                ]}
+              >
                 <Text style={styles.resultText}>
-                  {isCorrect ? 'Correct' : 'Incorrect'}
+                  {isCorrect ? "Correct" : "Incorrect"}
                 </Text>
               </View>
             </View>
@@ -152,23 +197,23 @@ export default function AnswersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   closeButton: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: 'Inter_700Bold',
+    fontFamily: "Inter_700Bold",
   },
   placeholder: {
     width: 24,
@@ -179,10 +224,10 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     marginBottom: 32,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -190,13 +235,13 @@ const styles = StyleSheet.create({
   },
   questionNumber: {
     fontSize: 16,
-    color: '#8A2BE2',
-    fontFamily: 'Inter_700Bold',
+    color: "#8A2BE2",
+    fontFamily: "Inter_700Bold",
     marginBottom: 8,
   },
   questionText: {
     fontSize: 18,
-    fontFamily: 'Inter_500Medium',
+    fontFamily: "Inter_500Medium",
     marginBottom: 16,
   },
   optionsContainer: {
@@ -210,33 +255,33 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: "Inter_400Regular",
   },
   correctText: {
-    color: '#4CAF50',
+    color: "#4CAF50",
   },
   incorrectText: {
-    color: '#EF5350',
+    color: "#EF5350",
   },
   textInputContainer: {
     marginTop: 8,
   },
   answerLabel: {
     fontSize: 14,
-    fontFamily: 'Inter_500Medium',
-    color: '#666',
+    fontFamily: "Inter_500Medium",
+    color: "#666",
     marginBottom: 4,
   },
   textAnswer: {
     fontSize: 16,
-    fontFamily: 'Inter_400Regular',
+    fontFamily: "Inter_400Regular",
     padding: 12,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     borderRadius: 8,
     marginBottom: 12,
   },
   resultBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: 16,
     right: 16,
     paddingHorizontal: 12,
@@ -244,14 +289,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   correctBadge: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: "#E8F5E9",
   },
   incorrectBadge: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: "#FFEBEE",
   },
   resultText: {
     fontSize: 14,
-    fontFamily: 'Inter_500Medium',
-    color: '#4CAF50',
+    fontFamily: "Inter_500Medium",
+    color: "#4CAF50",
   },
 });
