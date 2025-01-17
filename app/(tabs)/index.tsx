@@ -1,4 +1,5 @@
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { router } from 'expo-router';
 import Header from '@/components/header';
 import { useRouter } from 'expo-router';
 
@@ -24,9 +25,10 @@ export default function Home() {
         {/* Menu List */}
         <ScrollView>
           <TouchableOpacity style={[styles.card, styles.grammarCard]} onPress={() => handleQuizSelect('Grammar')}>
+
             <View>
               <Text style={styles.cardTitle}>Grammar</Text>
-              <Text style={styles.cardDescription}>Deskripsi Grammar dikit</Text>
+              <Text style={styles.cardDescription}>Learn the rules of perfect sentences by practice grammar essentials!</Text>
             </View>
             <Image
               source={require('@/assets/images/grammar-icons.png')}
@@ -37,7 +39,7 @@ export default function Home() {
           <TouchableOpacity style={[styles.card, styles.vocabularyCard]} onPress={() => handleQuizSelect('Vocabulary')}>
             <View>
               <Text style={styles.cardTitle}>Vocabulary</Text>
-              <Text style={styles.cardDescription}>Deskripsi Grammar dikit</Text>
+              <Text style={styles.cardDescription}>Discover new words and strengthen your vocabulary!</Text>
             </View>
             <Image
               source={require('@/assets/images/vocab-icons.png')}
@@ -48,7 +50,7 @@ export default function Home() {
           <TouchableOpacity style={[styles.card, styles.readingCard]} onPress={() => handleQuizSelect('Reading')}>
             <View>
               <Text style={styles.cardTitle}>Reading</Text>
-              <Text style={styles.cardDescription}>Deskripsi Grammar dikit</Text>
+              <Text style={styles.cardDescription}>Dive into engaging texts and sharpen your understanding of key ideas and details!</Text>
             </View>
             <Image
               source={require('@/assets/images/reading-icons.png')}
@@ -59,7 +61,7 @@ export default function Home() {
           <TouchableOpacity style={[styles.card, styles.writingCard]} onPress={() => handleQuizSelect('Writing')}>
             <View>
               <Text style={styles.cardTitle}>Writing</Text>
-              <Text style={styles.cardDescription}>Deskripsi Grammar dikit</Text>
+              <Text style={styles.cardDescription}>Practice creating polished sentences and cohesive paragraphs!</Text>
             </View>
             <Image
               source={require('@/assets/images/writing-icons.png')}
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
   },
   writingCard: {
     backgroundColor: '#FF8800',
+    marginBottom: 16,
   },
   cardTitle: {
     color: 'white',
@@ -125,5 +128,6 @@ const styles = StyleSheet.create({
   cardDescription: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: 16,
+    maxWidth: 220,
   },
 });

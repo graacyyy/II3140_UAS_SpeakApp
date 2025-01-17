@@ -38,16 +38,16 @@ const LearnPage = () => {
       <Header />
       <View style={styles.container}>
         <View style={styles.titleSection}>
-          <Text style={styles.title}>Watch to Learn</Text>
-          <Text style={styles.subtitle}>Your learning journey and progress</Text>
+          <Text style={styles.title}>Learn Through Videos</Text>
+          <Text style={styles.subtitle}>Discover curated videos to enhance your English skills.</Text>
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <HorizontalVideoList category="Grammar" description="brief description..." />
-          <HorizontalVideoList category="Vocabulary" description="brief description..." />
-          <HorizontalVideoList category="Reading" description="brief description..." />
-          <HorizontalVideoList category="Writing" description="brief description..." />
-          <HorizontalVideoList category="Speaking" description="brief description..." />
-          <HorizontalVideoList category="Listening" description="brief description..." />
+          <HorizontalVideoList category="Grammar" description="Strengthen your understanding of grammar rules" />
+          <HorizontalVideoList category="Vocabulary" description="Boost your word power and their practical usage" />
+          <HorizontalVideoList category="Reading" description="Enhance your skills in understanding and analyzing texts" />
+          <HorizontalVideoList category="Writing" description="Learn to write effectively focusing on structure, tone, and clarity" />
+          <HorizontalVideoList category="Speaking" description="Practice clear and natural conversations" />
+          <HorizontalVideoList category="Listening" description="Train your ears to understand different accents, tones, and contexts in English" />
         </ScrollView>
       </View>
     </>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#4B5563',
   },
   categorySection: {
