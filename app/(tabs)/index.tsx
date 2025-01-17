@@ -1,8 +1,18 @@
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import Header from '@/components/header';
+import { useRouter } from 'expo-router';
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleQuizSelect = (category: 'Grammar' | 'Vocabulary' | 'Reading' | 'Writing') => {
+    router.push({
+      pathname: '/(quiz)/startquiz',
+      params: { category }
+    });
+  };
+
   return (
     <>
       <Header />
@@ -13,8 +23,9 @@ export default function Home() {
         </View>
 
         {/* Menu List */}
-        <ScrollView showsVerticalScrollIndicator = {false}>
-          <TouchableOpacity style={[styles.card, styles.grammarCard]}>
+        <ScrollView>
+          <TouchableOpacity style={[styles.card, styles.grammarCard]} onPress={() => handleQuizSelect('Grammar')}>
+
             <View>
               <Text style={styles.cardTitle}>Grammar</Text>
               <Text style={styles.cardDescription}>Learn the rules of perfect sentences by practice grammar essentials!</Text>
@@ -25,7 +36,7 @@ export default function Home() {
             />
           </TouchableOpacity>
           
-          <TouchableOpacity style={[styles.card, styles.vocabularyCard]}>
+          <TouchableOpacity style={[styles.card, styles.vocabularyCard]} onPress={() => handleQuizSelect('Vocabulary')}>
             <View>
               <Text style={styles.cardTitle}>Vocabulary</Text>
               <Text style={styles.cardDescription}>Discover new words and strengthen your vocabulary!</Text>
@@ -36,7 +47,7 @@ export default function Home() {
             />
           </TouchableOpacity>
             
-          <TouchableOpacity style={[styles.card, styles.readingCard]}>
+          <TouchableOpacity style={[styles.card, styles.readingCard]} onPress={() => handleQuizSelect('Reading')}>
             <View>
               <Text style={styles.cardTitle}>Reading</Text>
               <Text style={styles.cardDescription}>Dive into engaging texts and sharpen your understanding of key ideas and details!</Text>
@@ -47,7 +58,7 @@ export default function Home() {
             />
           </TouchableOpacity>
           
-          <TouchableOpacity style={[styles.card, styles.writingCard]}>
+          <TouchableOpacity style={[styles.card, styles.writingCard]} onPress={() => handleQuizSelect('Writing')}>
             <View>
               <Text style={styles.cardTitle}>Writing</Text>
               <Text style={styles.cardDescription}>Practice creating polished sentences and cohesive paragraphs!</Text>

@@ -1,20 +1,11 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useFonts, Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
 
-const QuizResults = () => {
+const QuizResultsScreen = () => {
   const router = useRouter();
-  const params = useLocalSearchParams();
-  
-  // Add handleBack function
-  const handleBack = () => {
-    router.back();
-  };
-
-  // Provide default values if params are undefined
-  const score = params.score || 3;
-  const totalQuestions = params.totalQuestions || 5;
+  const { userAnswers, questions, category, score, totalQuestions } = useLocalSearchParams();
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -26,18 +17,45 @@ const QuizResults = () => {
     return null;
   }
 
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleViewAnswers = () => {
+    console.log('Passing data:', {
+      userAnswers,
+      questions,
+      category
+    });
+
+    router.push({
+      pathname: '/answers',
+      params: {
+        userAnswers,
+        questions,
+        category,
+      }
+    });
+  };
+
+  const handleGoBackHome = () => {
+    router.push('/');
+  };
+
+  const parsedScore = score ? parseInt(score as string) : 0;
+  const parsedTotalQuestions = totalQuestions ? parseInt(totalQuestions as string) : 0;
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack}>
           <Text style={styles.closeButton}>✕</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Grammar</Text>
+        <Text style={styles.headerTitle}>{category || 'Unknown Category'}</Text>
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.score}>⭐ {score}/{totalQuestions}</Text>
+        <Text style={styles.score}>⭐ {parsedScore}/{parsedTotalQuestions}</Text>
         <View style={styles.emojiContainer}>
           <Image 
             source={require('../../assets/images/star-face-emoji.png')} 
@@ -53,13 +71,13 @@ const QuizResults = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.finishButton}
-          onPress={() => router.push('/')}
+          onPress={handleGoBackHome}
         >
           <Text style={styles.finishButtonText}>Finish</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
-          onPress={() => router.back()}
+          onPress={handleViewAnswers}
         >
           <Text style={styles.seeAnswersText}>See Answers</Text>
         </TouchableOpacity>
@@ -152,4 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuizResults; 
+export default QuizResultsScreen;
