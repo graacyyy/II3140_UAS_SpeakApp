@@ -1,5 +1,8 @@
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import Header from '@/components/header';
+import { useAuth } from '@/context/useAuth';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 
 type HistoryDataItem = {
   type: string;
@@ -28,6 +31,14 @@ const HistoryItem = ({ type, timestamp, score }: HistoryDataItem) => (
 );
 
 export default function History() {
+    const { session } = useAuth();
+  
+    useEffect(() => {
+      if (!session) {
+        router.replace("/");
+      }
+    });
+  
   return (
     <>
       <Header />
