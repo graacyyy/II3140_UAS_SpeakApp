@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Stack, Link } from 'expo-router';
+import React from 'react';
 
 type Props = {}
 

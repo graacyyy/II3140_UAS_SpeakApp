@@ -7,21 +7,21 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { useFonts, Inter_400Regular, Inter_700Bold, Inter_500Medium } from '@expo-google-fonts/inter';
-
-type RootStackParamList = {
-  Home: undefined;
-  Quiz: undefined;
-};
-
-type StartQuizProps = {
-  navigation: StackNavigationProp<RootStackParamList, 'Home'>;
-};
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const BACKGROUND_COLOR = '#8A2BE2'; // Bright purple color
 
-const StartQuiz: React.FC<StartQuizProps> = ({ navigation }) => {
+const categoryDescriptions: { [key: string]: string } = {
+  grammar: "Test your knowledge of English grammar rules and structures.",
+  vocabulary: "Expand your English vocabulary and learn new words.",
+  writing: "Practice your English writing skills with various prompts.",
+  reading: "Improve your reading comprehension with diverse texts.",
+};
+
+const StartQuiz: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const { category } = useLocalSearchParams<{ category: string }>();
+  const router = useRouter();
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -34,18 +34,16 @@ const StartQuiz: React.FC<StartQuizProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Close Button */}
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.closeButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => router.push('/(tabs)')}
           accessibilityLabel="Go back"
         >
           <Text style={styles.closeButtonText}>✕</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Image Section */}
       <View style={styles.imageContainer}>
         <Image 
           source={require('../../assets/images/green-book.png')} 
@@ -54,19 +52,17 @@ const StartQuiz: React.FC<StartQuizProps> = ({ navigation }) => {
         />
       </View>
 
-      {/* Text Section */}
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Grammar</Text>
-        <Text style={styles.subtitle}>
-          Sharpen your grammar skills with this interactive quiz!
-        </Text>
-      </View>
+          <Text style={styles.title}>{category}</Text>
+          <Text style={styles.subtitle}>
+            {categoryDescriptions[category as keyof typeof categoryDescriptions] || "Improve your English skills with this quiz."}
+          </Text>
+        </View>
 
-      {/* Button Section */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.startButton}
-          onPress={() => navigation.navigate('Quiz')}
+          onPress={() => router.push({ pathname: '/quizscreen', params: { category } })}
           accessibilityLabel="Start quiz"
         >
           <Text style={styles.startButtonText}>Start</Text>
@@ -74,7 +70,7 @@ const StartQuiz: React.FC<StartQuizProps> = ({ navigation }) => {
 
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => router.back()}
           accessibilityLabel="Go back to previous screen"
         >
           <Text style={styles.backButtonText}>Back</Text>
