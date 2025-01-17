@@ -1,52 +1,75 @@
-import { Session, User } from "@supabase/supabase-js";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { type Session, User } from "@supabase/supabase-js";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { supabase } from "@/lib/supabase";
 import { router } from "expo-router";
 
 export interface AuthContextProps {
   session: Session | null;
-  login: (email: string, password: string) => void;
-  logout: () => void;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (email: string, password: string) => {
-    const req = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (req.error) {
-      throw req.error.message;
-    }
-
+  useEffect(() => {
+    // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsLoading(false);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
-    router.push("/");
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+      router.push("/(tabs)");
+    } catch (error) {
+      if (error instanceof Error) throw error.message;
+      throw "An unexpected error occurred";
+    }
   };
 
-  const logout = async (redirect: boolean = true) => {
-    const req = await supabase.auth.signOut();
-    if (req.error) {
-      throw req.error.message;
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.replace("/login");
+    } catch (error) {
+      if (error instanceof Error) throw error.message;
+      throw "An unexpected error occurred";
     }
-    router.replace("/login");
   };
 
   return (
     <AuthContext.Provider
       value={{
         session,
+        isLoading,
         login,
         logout,
       }}

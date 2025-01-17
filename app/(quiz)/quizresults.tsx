@@ -44,11 +44,11 @@ const QuizResultsScreen = () => {
   };
 
   const handleViewAnswers = () => {
-    console.log("Passing data:", {
-      userAnswers,
-      questions,
-      category,
-    });
+    // console.log("Passing data:", {
+    //   userAnswers,
+    //   questions,
+    //   category,
+    // });
 
     router.push({
       pathname: "/answers",

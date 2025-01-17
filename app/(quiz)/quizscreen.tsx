@@ -85,9 +85,6 @@ export default function QuizScreen() {
       const sortedUserAnswers = [...selectedAnswers].sort();
       const sortedCorrectAnswers = [...(question.answer as string[])].sort();
 
-      console.log("Sorted user answers:", sortedUserAnswers);
-      console.log("Sorted correct answers:", sortedCorrectAnswers);
-
       // Check if arrays have same length and all elements match
       isCorrect =
         sortedUserAnswers.length === sortedCorrectAnswers.length &&
