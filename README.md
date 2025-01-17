@@ -18,5 +18,8 @@
 
 ---
 
-## 🔗 Akses Aplikasi  
+## 🔗 Akses Website  
 🌐 **[Coba Speak. Sekarang!](https://ii-3140-uas-speak-app.vercel.app/)**  
+
+## 🔗 Install Aplikasi  
+🌐 **[Coba Speak. Sekarang!](https://drive.google.com/file/d/1t55c53fe3Y-kPW0YZmhguNZCrFY7FFS3/view?usp=drive_link)** 
