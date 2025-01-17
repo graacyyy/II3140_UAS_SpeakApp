@@ -11,11 +11,15 @@ import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/context/useAuth";
+import { AuthError } from "@supabase/supabase-js";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     console.log("Login attempt:", { email, password });
@@ -26,18 +30,12 @@ export default function Login() {
     }
     // console.log("Logging in with:", email, password);
 
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    else {
-      router.dismissAll();
+    try {
+      login(email, password);
       router.push("/(tabs)");
+    } catch (error) {
+      const err = error as AuthError;
+      Alert.alert(err.message);
     }
   };
 

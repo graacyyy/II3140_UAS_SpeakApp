@@ -11,6 +11,7 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
+import { useAuth } from "@/context/useAuth";
 
 export default function Home() {
   // const [session, setSession] = useState<Session | null>(null);
@@ -30,6 +31,14 @@ export default function Home() {
   //     router.replace("/");
   //   }
   // }, [session]);
+
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+  });
 
   const handleQuizSelect = (
     category: "Grammar" | "Vocabulary" | "Reading" | "Writing"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,18 @@ import {
   Inter_700Bold,
   Inter_500Medium,
 } from "@expo-google-fonts/inter";
+import { useAuth } from "@/context/useAuth";
 
 const QuizResultsScreen = () => {
   const router = useRouter();
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+  });
+
   const { userAnswers, questions, category, score, totalQuestions } =
     useLocalSearchParams();
 

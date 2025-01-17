@@ -8,6 +8,8 @@ import {
 import Header from "@/components/header";
 import { useEffect, useState } from "react";
 import { quizService } from "@/lib/quizService";
+import { useAuth } from "@/context/useAuth";
+import { router } from "expo-router";
 
 interface HistoryItem {
   id: number;
@@ -60,6 +62,14 @@ export default function History() {
 
     loadHistory();
   }, []);
+
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+  });
 
   return (
     <>

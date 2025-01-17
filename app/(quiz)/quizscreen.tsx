@@ -15,6 +15,7 @@ import {
   Inter_500Medium,
 } from "@expo-google-fonts/inter";
 import { quizService } from "@/lib/quizService";
+import { useAuth } from "@/context/useAuth";
 
 interface Question {
   id: number;
@@ -41,6 +42,14 @@ export default function QuizScreen() {
     loadQuestions();
   }, [category]);
 
+  const { session } = useAuth();
+
+  useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+  });
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -57,9 +66,6 @@ export default function QuizScreen() {
   });
 
   if (!fontsLoaded) return null;
-
-  // const questions =
-  //   questionsByCategory[category as keyof typeof questionsByCategory] || [];
 
   const handleBack = () => {
     router.back();
