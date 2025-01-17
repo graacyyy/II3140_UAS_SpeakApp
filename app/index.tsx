@@ -1,37 +1,43 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Stack, Link, router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabase';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import { Stack, Link, router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
-type Props = {}
-
-const LandingPage = (props: Props) => {
-  const [session, setSession] = useState<Session | null>(null)
+const LandingPage = () => {
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
+      setSession(session);
+    });
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [])
+      setSession(session);
+    });
+  }, []);
 
-  if (session) {
-    router.replace("/(tabs)")  
-  }
-
+  useEffect(() => {
+    if (session) {
+      router.replace("/(tabs)");
+    }
+  }, [session]);
 
   return (
     <>
-      <Stack.Screen options={{headerShown: false}} />
-      <SafeAreaView style={styles.container}>        
+      <Stack.Screen options={{ headerShown: false }} />
+      <SafeAreaView style={styles.container}>
         {/* Hero Image */}
         <View style={styles.imageContainer}>
           <Image
-            source={require('@/assets/images/landing-page.png')}
+            source={require("@/assets/images/landing-page.png")}
             style={styles.heroImage}
             resizeMode="cover"
           />
@@ -41,7 +47,8 @@ const LandingPage = (props: Props) => {
         <View style={styles.content}>
           <View style={styles.textContainer}>
             <Text style={styles.mainHeading}>
-              The easiest way to learn <Text style={styles.highlightText}>english</Text>. <Text>📚</Text>
+              The easiest way to learn{" "}
+              <Text style={styles.highlightText}>english</Text>. <Text>📚</Text>
             </Text>
 
             <Text style={styles.subHeading}>
@@ -51,13 +58,13 @@ const LandingPage = (props: Props) => {
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
-            <Link href='/signup' asChild>
+            <Link href="/signup" asChild>
               <TouchableOpacity style={styles.signUpButton}>
                 <Text style={styles.signUpText}>Sign Up</Text>
               </TouchableOpacity>
             </Link>
 
-            <Link href='/login' asChild>
+            <Link href="/login" asChild>
               <TouchableOpacity style={styles.loginButton}>
                 <Text style={styles.loginText}>Log In</Text>
               </TouchableOpacity>
@@ -66,78 +73,77 @@ const LandingPage = (props: Props) => {
         </View>
       </SafeAreaView>
     </>
-    
   );
-}
+};
 
 export default LandingPage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   imageContainer: {
-    height: '50%',
-    width: '100%',
+    height: "50%",
+    width: "100%",
   },
   heroImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 24,
     paddingTop: 40,
     paddingBottom: 40,
   },
   textContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   mainHeading: {
     fontSize: 36,
-    fontWeight: 'bold',
-    color: '#0F172A',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#0F172A",
+    textAlign: "center",
     marginBottom: 16,
     lineHeight: 44,
   },
   highlightText: {
-    color: '#8B5CF6',
+    color: "#8B5CF6",
   },
   subHeading: {
     fontSize: 20,
-    color: '#64748B',
-    textAlign: 'center',
+    color: "#64748B",
+    textAlign: "center",
   },
   buttonContainer: {
     marginTop: 12,
-    width: '100%',
+    width: "100%",
     gap: 16,
   },
   signUpButton: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingVertical: 18,
     borderRadius: 100,
-    alignItems: 'center',
+    alignItems: "center",
   },
   loginButton: {
     paddingVertical: 18,
     borderRadius: 100,
-    alignItems: 'center',
-    borderColor: '#8B5CF6',
+    alignItems: "center",
+    borderColor: "#8B5CF6",
     borderWidth: 2,
   },
   signUpText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   loginText: {
-    color: '#8B5CF6',
+    color: "#8B5CF6",
     fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
