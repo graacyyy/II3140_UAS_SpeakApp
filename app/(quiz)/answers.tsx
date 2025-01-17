@@ -47,8 +47,6 @@ export default function AnswersScreen() {
     : [];
 
   // Add after the decode statements
-  console.log("Decoded User Answers:", decodedUserAnswers);
-  console.log("Decoded Questions:", decodedQuestions);
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
