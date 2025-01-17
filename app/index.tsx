@@ -21,8 +21,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
-      <SafeAreaView style={styles.container}>
+      
         {/* Hero Image */}
         <View style={styles.imageContainer}>
           <Image
@@ -60,7 +59,7 @@ const LandingPage = () => {
             </Link>
           </View>
         </View>
-      </SafeAreaView>
+    
     </>
   );
 };
@@ -70,7 +69,7 @@ export default LandingPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
   },
   imageContainer: {
     height: "50%",

@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
-import { Icon } from "react-native-vector-icons/Icon";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function TabLayout() {
 
@@ -9,6 +9,8 @@ export default function TabLayout() {
       headerShown: false,
       tabBarStyle: {
         paddingTop: 6,
+        paddingBottom : 10,
+        minHeight: 60
       }, 
       tabBarActiveTintColor: '#8B5CF6',
       tabBarInactiveTintColor: '#838E9E'
@@ -22,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen name="learn" options={{
         title: 'Learn',
         tabBarIcon: ({color}) => (
-          <Icon name="book-open"  size={24} color={color} />
+          <Icon name="book"  size={24} color={color} />
         )
       }}/>
       <Tabs.Screen name="history" options={{
@@ -34,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen name="profile" options={{
         title: 'Profile',
         tabBarIcon: ({color}) => (
-          <Icon name="profile" size={24} color={color} />
+          <Icon name="user" size={24} color={color} />
         )
       }}/>
     </Tabs>
