@@ -1,10 +1,29 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Stack, Link } from 'expo-router';
-import React from 'react';
+import { Stack, Link, router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Session } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase';
 
 type Props = {}
 
 const LandingPage = (props: Props) => {
+  const [session, setSession] = useState<Session | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+  }, [])
+
+  if (session) {
+    router.replace("/(tabs)")  
+  }
+
+
   return (
     <>
       <Stack.Screen options={{headerShown: false}} />
